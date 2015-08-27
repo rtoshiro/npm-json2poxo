@@ -6,7 +6,7 @@ var http = require('http');
 var url = require('url');
 var lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
 
-var poxo = require(lib + '/poxo.js');
+var json2poxo = require(lib + '/json2poxo.js');
 var parser = require('jsonlint').parser;
 var yargs = require('yargs')
   .usage('Usage: $0 <command>')
@@ -103,7 +103,7 @@ if (command === 'java' || command === 'objc')
       });
 
       response.on('end', function () {
-        var classes = poxo.toX(command, argv.base, params, data);
+        var classes = json2poxo.toX(command, argv.base, params, data);
         for (var i = 0; i < classes.length; i++) {
           var obj = classes[i];
           var target = argv.output + "/" + obj.fileName;
@@ -120,7 +120,7 @@ if (command === 'java' || command === 'objc')
         return console.log(err);
       }
 
-      var classes = poxo.toX(command, argv.base, params, data);
+      var classes = json2poxo.toX(command, argv.base, params, data);
       for (var i = 0; i < classes.length; i++) {
         var obj = classes[i];
         var target = argv.output + "/" + obj.fileName;

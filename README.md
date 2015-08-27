@@ -1,24 +1,24 @@
-POXO
+json2poxo
 =========
 
-POXO converts from JSON to another language.
+**json2poxo** generates "plain old x objects" from JSON. 
 
 ## Command line interface
 
-Install poxo with npm to use the command line interface:
+Install json2poxo with npm to use the command line interface:
 
-    npm install poxo -g
+    npm install json2poxo -g
 
 Generating POJO (Java) from JSON
 
-    poxo java --input file.json --ouput newDirectory --base baseClassName --package com.github.rtoshiro
+    json2poxo java --input file.json --ouput newDirectory --base baseClassName --package com.github.rtoshiro
 
 ### Languages
 
 ```
-$ poxo
+$ json2poxo
 
-Usage: poxo <command>
+Usage: json2poxo <command>
 
 Commands:
   java  Parse JSON and generates Java classes (POJO)
@@ -46,17 +46,17 @@ Options:
   -p, --prefix  Class prefix
 ```
 
-More languages will be come. 
+More languages will be come.
 
 
 ## Module interface
 
-POXO is intended to run throught CLI, but you can use it as a module like this:
+**json2poxo** is intended to run throught CLI, but you can use it as a module like this:
 
 ```
-var poxo = require("poxo");
+var json2poxo = require("json2poxo");
 
-var poxos = poxo.toX('java', 'BaseClass', { "package" : "com.github.rtoshiro", "includeGson" : true }, { "myJson" : {"param1" : "ok" } });
+var poxos = json2poxo.toX('java', 'BaseClass', { "package" : "com.github.rtoshiro", "includeGson" : true }, { "myJson" : {"param1" : "ok" } });
 
 ```
 

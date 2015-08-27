@@ -1,13 +1,13 @@
 {
-  "name": "poxo",
+  "name": "json2poxo",
   "version": "1.0.0",
-  "description": "",
-  "main": "./lib/poxo.js",
+  "description": "Generates 'plain old x objects' from JSON",
+  "main": "./lib/json2poxo.js",
   "preferGlobal" : true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Toshiro Sugii <rtoshiro@gmail.com>",
+  "author": "Toshiro Sugii <rtoshiro@printwtf.com>",
   "license": "ISC",
   "dependencies" : {
     "handlebars" : "3.0.x",
@@ -15,10 +15,10 @@
     "yargs" : "3.21.x"
   },
   "bin": {
-    "poxo": "./bin/poxo"
+    "json2poxo": "./bin/json2poxo"
   },
   "repository" : {
     "type" : "git"
-    , "url" : "https://github.com/rtoshiro/poxo.git"
+    , "url" : "https://github.com/rtoshiro/json2poxo.git"
   }
 }
