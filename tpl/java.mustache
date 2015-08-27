@@ -1,0 +1,71 @@
+{{#if package}}
+package {{package}};
+{{else}}
+package com.example;
+{{/if}}
+
+{{#if includeGson}}
+import com.google.gson.annotations.SerializedName;
+{{/if}}
+
+public class {{name}} {
+
+{{#each properties}}
+  {{#if name}}
+    {{#if ../../includeGson}}
+  private static final String FIELD_{{&uppername}} = "{{&originalName}}";
+    {{/if}}
+  {{/if}}
+{{/each}}
+
+{{#each properties}}
+  {{#if name}}
+    {{#if ../../includeGson}}
+  @Exposed
+  @SerializedName(FIELD_{{&uppername}})
+    {{/if}}
+  private {{&type}} {{&name}};
+  {{/if}}
+{{/each}}
+
+  public {{name}}(){
+
+  }
+
+{{#each properties}}
+  {{#if name}}
+  public void set{{&capname}}({{&type}} value) {
+      this.{{&name}} = value;
+  }
+
+  public {{&type}} get{{&capname}}() {
+      return this.{{&name}};
+  }
+
+  {{/if}}
+{{/each~}}
+
+{{#if primaryKey}}
+  @Override
+  public boolean equals(Object obj) {
+      if (obj instanceof {{&name}}) {
+          return (({{&name}}) obj).get{{&capkey}}() == {{primaryKey}};
+      }
+      return false;
+  }
+
+  @Override
+  public int hashCode(){
+      return ((Long){{primaryKey}}).hashCode();
+  }
+{{/if}}
+
+{{#if includeGson}}
+  @Override
+  public toString() {
+    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    return gson.toJson(this);
+  }
+{{/if}}
+
+}

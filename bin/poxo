@@ -1,0 +1,135 @@
+#!/usr/bin/env node
+"use strict";
+var fs = require('fs');
+var path = require('path');
+var http = require('http');
+var url = require('url');
+var lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
+
+var poxo = require(lib + '/poxo.js');
+var parser = require('jsonlint').parser;
+var yargs = require('yargs')
+  .usage('Usage: $0 <command>')
+  .command('java', 'Parse JSON and generates Java classes (POJO)', function(yargs) {
+    argv = yargs
+    .option('i', {
+      alias: 'input',
+      demand:1,
+      description: 'Input file path or URL (GET)'
+    })
+    .option('o', {
+      alias: 'output',
+      demand:1,
+      description: 'Output directory'
+    })
+    .option('b', {
+      alias: 'base',
+      demand:1,
+      description: 'Name of JSON root class'
+    })
+    .option('p', {
+      alias: 'package',
+      description: 'Package name'
+    })
+    .option('g', {
+      alias: 'gson',
+      description: 'Includes GSON annotations'
+    })
+    .argv;
+  })
+  .command('objc', 'Parse JSON and generates Objective-C files (.h and .m)', function(yargs) {
+    argv = yargs
+    .option('i', {
+      alias: 'input',
+      demand:1,
+      description: 'Input file path or URL (GET)'
+    })
+    .option('o', {
+      alias: 'output',
+      demand:1,
+      description: 'Output directory'
+    })
+    .option('b', {
+      alias: 'base',
+      demand:1,
+      description: 'Name of JSON root class'
+    })
+    .option('p', {
+      alias: 'prefix',
+      description: 'Class prefix'
+    })
+    .argv;
+  })
+  .demand(1),
+  argv = yargs.argv,
+  command = argv._[0];
+
+var params = [];
+if (command == 'java')
+{
+  if (argv.p)
+    params.package = argv.p;
+
+  if (argv.g)
+    params.includeGson = argv.g;
+}
+else if (command == 'objc')
+{
+  if (argv.p)
+    params.prefix = argv.p;
+}
+
+if (command === 'java' || command === 'objc')
+{
+  try {
+    fs.mkdirSync(argv.output, "0755");
+  } catch (e) {
+
+  }
+
+  var input = argv.input;
+  if (input.indexOf('http') !== -1) {
+
+    var objUrl = url.parse(input);
+    var options = {
+      host: objUrl.host,
+      path: objUrl.path
+    };
+
+    var callback = function(response) {
+      var data = '';
+      response.on('data', function (chunk) {
+        data += chunk;
+      });
+
+      response.on('end', function () {
+        var classes = poxo.toX(command, argv.base, params, data);
+        for (var i = 0; i < classes.length; i++) {
+          var obj = classes[i];
+          var target = argv.output + "/" + obj.fileName;
+          fs.writeFileSync(target, obj.sourceCode);
+        }
+      });
+    };
+
+    http.request(options, callback).end();
+  }
+  else {
+    fs.readFile(input, 'utf8', function (err, data) {
+      if (err) {
+        return console.log(err);
+      }
+
+      var classes = poxo.toX(command, argv.base, params, data);
+      for (var i = 0; i < classes.length; i++) {
+        var obj = classes[i];
+        var target = argv.output + "/" + obj.fileName;
+        fs.writeFileSync(target, obj.sourceCode);
+      }
+    });
+  }
+}
+else
+{
+  yargs.showHelp();
+}
