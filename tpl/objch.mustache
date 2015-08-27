@@ -1,0 +1,18 @@
+//
+//  {{name}}.h
+//
+//  Created on {{today}}
+//  Copyright (c) {{year}}. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface {{name}} : NSObject <NSCoding>
+
+{{#each properties}}
+  {{#if name}}
+@property (nonatomic, {{memory}}) {{type}} {{name}};
+  {{/if}}
+{{/each}}
+
+@end

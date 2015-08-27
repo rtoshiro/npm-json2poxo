@@ -1,0 +1,141 @@
+//
+//  {{name}}.m
+//
+//  Created by on {{today}}
+//  Copyright (c) {{year}}. All rights reserved.
+//
+
+#import "{{name}}.h"
+
+// Original names
+{{#each properties}}
+  {{#if name}}
+NSString * const k{{capname}} = @"{{originalName}}";
+  {{/if}}
+{{/each}}
+
+@interface {{name}} ()
+
+- (id)objectOrNilForKey:(id)aKey fromDictionary:(NSDictionary *)dict;
+
+@end
+
+@implementation {{name}}
+
++ ({{name}} *)modelWithDictionary:(NSDictionary *)dict
+{
+  {{name}} *instance = [[{{name}} alloc] initWithDictionary:dict];
+  return instance;
+}
+
++ ({{name}} *)modelWithString:(NSString *)json
+{
+  {{name}} *instance = [[{{name}} alloc] initWithString:json];
+  return instance;
+}
+
+- (instancetype)initWithString:(NSString *)json
+{
+  self = [super init];
+
+  NSError *jsonError = nil;
+  NSData *objectData = [json dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:objectData
+                                      options:NSJSONReadingMutableContainers
+                                        error:&jsonError];
+  if (!jsonError)
+    self = [self initWithDictionary:dict];
+
+  return self;
+}
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict
+{
+  self = [super init];
+
+  if(self && [dict isKindOfClass:[NSDictionary class]]) {
+{{#each properties}}
+  {{#if isNumber}}
+    self.{{name}} = [self objectOrNilForKey:k{{capname}} fromDictionary:dict];
+  {{/if}}
+  {{#if isString}}
+    self.{{name}} = [self objectOrNilForKey:k{{capname}} fromDictionary:dict];
+  {{/if}}
+
+  {{~#if isObject}}
+
+    NSObject *obj{{capname}} = [dict objectForKey:k{{capname}}];
+   {{#if isArray}}
+    if ([obj{{capname}} isKindOfClass:[NSArray class]])
+    {
+      NSMutableArray *list{{capname}} = [NSMutableArray array];
+      for (NSDictionary *item in (NSArray *)obj{{capname}}) {
+        if ([item isKindOfClass:[NSDictionary class]]) {
+          [list{{capname}} addObject:[{{../../../name}} modelObjectWithDictionary:item]];
+        }
+      }
+      self.{{name}} = list{{capname}};
+    }
+   {{else}}
+    if ([obj{{capname}} isKindOfClass:[NSDictionary class]])
+    {
+      self.{{name}} = [{{name}}];
+    }
+   {{/if}}
+  {{/if}}
+{{/each}}
+  }
+  return self;
+}
+
+- (NSDictionary *)dictionaryRepresentation
+{
+  NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
+{{#each properties}}
+  {{#if isBool}}
+  [mutableDict setValue:self.{{name}} forKey:k{{capname}}];
+  {{/if}}
+{{/each}}
+  return [NSDictionary dictionaryWithDictionary:mutableDict];
+}
+
+- (NSString *)description
+{
+  return [NSString stringWithFormat:@"%@", [self dictionaryRepresentation]];
+}
+
+#pragma mark - Helper Method
+- (id)objectOrNilForKey:(id)aKey fromDictionary:(NSDictionary *)dict
+{
+    id object = [dict objectForKey:aKey];
+    return [object isEqual:[NSNull null]] ? nil : object;
+}
+
+#pragma mark - NSCoding Methods
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+  self = [super init];
+{{#each properties}}
+  {{#if isBool}}
+  self.{{name}} = [aDecoder decodeBoolForKey:k{{capname}}];
+  {{else}}
+  self.{{name}} = [aDecoder decodeObjectForKey:k{{capname}}];
+  {{/if}}
+{{/each}}
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+{{#each properties}}
+  {{#if isBool}}
+  [aCoder encodeBool:_{{name}} forKey:k{{capname}}];
+  {{else}}
+  [aCoder encodeObject:_{{name}} forKey:k{{capname}}];
+  {{/if}}
+{{/each}}
+}
+
+
+@end

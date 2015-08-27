@@ -1,0 +1,24 @@
+{
+  "name": "poxo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib/poxo.js",
+  "preferGlobal" : true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Toshiro Sugii <rtoshiro@gmail.com>",
+  "license": "ISC",
+  "dependencies" : {
+    "handlebars" : "3.0.x",
+    "jsonlint" : "1.6.x",
+    "yargs" : "3.21.x"
+  },
+  "bin": {
+    "poxo": "./bin/poxo"
+  },
+  "repository" : {
+    "type" : "git"
+    , "url" : "https://github.com/rtoshiro/poxo.git"
+  }
+}
