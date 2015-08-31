@@ -15,4 +15,11 @@
   {{/if}}
 {{/each}}
 
++ ({{name}} *)modelWithDictionary:(NSDictionary *)dict;
++ ({{name}} *)modelWithString:(NSString *)json;
+
+- (instancetype)initWithString:(NSString *)json;
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
+- (NSDictionary *)dictionaryRepresentation;
+
 @end
