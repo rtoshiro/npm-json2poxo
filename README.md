@@ -3,6 +3,10 @@ json2poxo
 
 **json2poxo** generates "plain old x objects" from JSON. 
 
+
+### First of all, you need install node.js and npm :)
+
+
 ## Command line interface
 
 Install json2poxo with npm to use the command line interface:
