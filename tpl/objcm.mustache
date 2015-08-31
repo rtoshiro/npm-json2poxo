@@ -95,7 +95,34 @@ NSString * const k{{capname}} = @"{{originalName}}";
   {{#if isBool}}
   [mutableDict setValue:self.{{name}} forKey:k{{capname}}];
   {{/if}}
+  {{#if isNumber}}
+  [mutableDict setValue:self.{{name}} forKey:k{{capname}}];
+  {{/if}}
+  {{#if isString}}
+  [mutableDict setValue:self.{{name}} forKey:k{{capname}}];
+  {{/if}}
+  {{~#if isObject}}
+   {{#if isArray}}
+  NSMutableArray *tempArray{{capname}} = [NSMutableArray array];
+  for (NSObject *subArray in self.{{name}}) {
+    if([subArray respondsToSelector:@selector(dictionaryRepresentation)]) {
+       [tempArray{{capname}} addObject:[subArray performSelector:@selector(dictionaryRepresentation)]];
+    } else {
+       [tempArray{{capname}} addObject:subArray];
+    }
+  }
+  [mutableDict setValue:[NSArray arrayWithArray:tempArray{{capname}}] forKey:k{{capname}}];
+
+   {{else}}
+   if([self.{{name}} respondsToSelector:@selector(dictionaryRepresentation)]) {
+     [mutableDict setValue:[self.{{name}} performSelector:@selector(dictionaryRepresentation)] forKey:k{{capname}}];
+   } else {
+     [mutableDict setValue:self.{{name}} forKey:k{{capname}}];
+   }
+   {{/if}}
+  {{/if}}
 {{/each}}
+
   return [NSDictionary dictionaryWithDictionary:mutableDict];
 }
 
@@ -137,5 +164,20 @@ NSString * const k{{capname}} = @"{{originalName}}";
 {{/each}}
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+  {{name}} *copy = [[{{name}} alloc] init];
+  if (copy)
+  {
+{{#each properties}}
+  {{#if isBool}}
+    copy.{{name}} = self.{{name}};
+  {{else}}
+    copy.{{name}} = [self.{{name}} copyWithZone:zone];
+  {{/if}}
+{{/each}}
+  }
+  return copy;
+}
 
 @end
