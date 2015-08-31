@@ -11,7 +11,7 @@
 
 {{#each properties}}
   {{#if name}}
-@property (nonatomic, {{memory}}) {{type}} {{name}};
+@property (nonatomic, {{memory}}) {{type}} *{{name}};
   {{/if}}
 {{/each}}
 
