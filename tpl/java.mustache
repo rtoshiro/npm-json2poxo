@@ -5,8 +5,13 @@ package com.example;
 {{/if}}
 
 {{#if includeGson}}
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
 {{/if}}
+
+import java.util.ArrayList;
 
 public class {{name}} {
 
@@ -21,7 +26,7 @@ public class {{name}} {
 {{#each properties}}
   {{#if name}}
     {{#if ../../includeGson}}
-  @Exposed
+  @Expose
   @SerializedName(FIELD_{{&uppername}})
     {{/if}}
   private {{&type}} {{&name}};
@@ -62,7 +67,7 @@ public class {{name}} {
 
 {{#if includeGson}}
   @Override
-  public toString() {
+  public String toString() {
     Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     return gson.toJson(this);
   }
