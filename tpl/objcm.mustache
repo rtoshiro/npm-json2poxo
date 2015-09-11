@@ -79,7 +79,7 @@ NSString * const k{{capname}} = @"{{originalName}}";
    {{else}}
     if ([obj{{capname}} isKindOfClass:[NSDictionary class]])
     {
-      self.{{name}} = [{{name}}];
+      self.{{name}} = [{{name}} modelObjectWithDictionary:obj{{capname}}];
     }
    {{/if}}
   {{/if}}
