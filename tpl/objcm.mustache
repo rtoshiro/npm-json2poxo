@@ -6,6 +6,10 @@
 //
 
 #import "{{name}}.h"
+{{#if imports}}
+{{&imports}}
+
+{{/if}}
 
 // Original names
 {{#each properties}}
@@ -71,7 +75,7 @@ NSString * const k{{capname}} = @"{{originalName}}";
       NSMutableArray *list{{capname}} = [NSMutableArray array];
       for (NSDictionary *item in (NSArray *)obj{{capname}}) {
         if ([item isKindOfClass:[NSDictionary class]]) {
-          [list{{capname}} addObject:[{{../../../name}} modelObjectWithDictionary:item]];
+          [list{{capname}} addObject:[{{../../../name}} modelWithDictionary:item]];
         }
       }
       self.{{name}} = list{{capname}};
@@ -79,7 +83,7 @@ NSString * const k{{capname}} = @"{{originalName}}";
    {{else}}
     if ([obj{{capname}} isKindOfClass:[NSDictionary class]])
     {
-      self.{{name}} = [{{name}} modelObjectWithDictionary:obj{{capname}}];
+      self.{{name}} = [{{capname}} modelWithDictionary:obj{{capname}}];
     }
    {{/if}}
   {{/if}}

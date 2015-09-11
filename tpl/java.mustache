@@ -4,6 +4,11 @@ package {{package}};
 package com.example;
 {{/if}}
 
+{{#if imports}}
+{{imports}}
+
+{{/if}}
+
 {{#if includeGson}}
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
