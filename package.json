@@ -1,6 +1,6 @@
 {
   "name": "json2poxo",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Generates 'plain old x objects' from JSON",
   "main": "./lib/json2poxo.js",
   "preferGlobal" : true,
